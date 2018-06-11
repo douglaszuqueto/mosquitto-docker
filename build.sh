@@ -80,5 +80,9 @@ for REPOSITORY in $REPOSITORIES; do
   fi
 done
 
-scp ./scripts/rpi-build.sh $RPI_USER@$RPI_HOST:/home/pi/
-ssh $RPI_USER@$RPI_HOST:/home/pi/rpi-build.sh
+if [$RPI_ARM == "x86_64"]; then
+    cd $ROOT_DIRECTORY
+
+    scp ./scripts/rpi-build.sh $RPI_USER@$RPI_HOST:/home/pi/
+    ssh $RPI_USER@$RPI_HOST:/home/pi/rpi-build.sh
+fi
