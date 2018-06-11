@@ -14,7 +14,7 @@ COPY docker-entrypoint.sh /
 RUN apk update && \
     chmod +x /docker-entrypoint.sh && \
     mkdir -p /mosquitto/config /mosquitto/data /mosquitto/log && \
-    apk add mosquitto && \
+    apk add mosquitto=1.4.15-r0 && \
     cp /etc/mosquitto/mosquitto.conf /mosquitto/config && \
     chown -R mosquitto:mosquitto /mosquitto && \
     rm -rf /var/cache/apk/*
