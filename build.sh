@@ -11,10 +11,11 @@ fi
 # enabled repositories for the build
 REPOSITORIES=$1
 
+RPI_ARM=$(uname -m)
 
 # enable all repositories if any specified
 if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES="mosquitto"
+    REPOSITORIES="mosquitto mosquitto-arm"
 fi
 
 # for returning later to the main directory
@@ -27,6 +28,9 @@ function build_repository {
 
     # build all enabled versions
     for TAG in $TAGS; do
+      if [ $ARM == true ]; then
+        continue
+      fi
       # some verbose
       echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
@@ -75,3 +79,6 @@ for REPOSITORY in $REPOSITORIES; do
     publish_repository $REPOSITORY
   fi
 done
+
+scp ./scripts/rpi-build.sh $RPI_USER@$RPI_HOST:/home/pi/
+ssh $RPI_USER@$RPI_HOST:/home/pi/rpi-build.sh
