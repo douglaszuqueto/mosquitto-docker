@@ -99,7 +99,7 @@ function publish_repository {
     fi
 
     if [ $ARCH = "armv7l" ]; then
-        docker push $NAMESPACE/$REPOSITORY:latest-arm
+        docker push $NAMESPACE/$REPOSITORY:arm-latest
     fi
 
 }
