@@ -28,13 +28,20 @@ function build_repository {
 
     # build all enabled versions
     for TAG in $TAGS; do
-           # some verbose
+      # some verbose
       echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
 
       if [ $USE_CACHE == true ]; then
         # build using cache
         docker build -t $NAMESPACE/$REPOSITORY:$TAG .
+        if [ $ARCH = "x86_64" ]; then
+            docker build -t $NAMESPACE/$REPOSITORY:$TAG .
+        fi
+
+        if [ $ARCH = "armv7l" ]; then
+            docker build -t $NAMESPACE/$REPOSITORY:$TAG-arm .
+        fi
       fi
 
       if [ $USE_CACHE == false ]; then
@@ -49,9 +56,16 @@ function build_repository {
       fi
     done
 
-    # create the latest tag
-    echo $'\n\n'"--> Aliasing $LATEST as 'latest'"$'\n'
-    docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+    if [ $ARCH = "x86_64" ]; then
+        echo $'\n\n'"--> Aliasing $LATEST as 'latest'"$'\n'
+        docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+    fi
+
+    if [ $ARCH = "armv7l" ]; then
+        echo $'\n\n'"--> Aliasing $LATEST-arm as 'latest'"$'\n'
+        docker tag $NAMESPACE/$REPOSITORY:$LATEST-arm $NAMESPACE/$REPOSITORY:arm-latest
+    fi
+
 }
 
 # function for publishing images
