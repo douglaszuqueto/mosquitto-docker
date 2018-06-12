@@ -78,15 +78,30 @@ function publish_repository {
 
     # publish all enabled versions
     for TAG in $TAGS; do
-      # some verbose
-      echo $'\n\n'"--> Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-      # publish
-      docker push $NAMESPACE/$REPOSITORY:$TAG
+        # some verbose
+        echo $'\n\n'"--> Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+        # publish
+        if [ $ARCH = "x86_64" ]; then
+            docker push $NAMESPACE/$REPOSITORY:$TAG
+        fi
+
+        if [ $ARCH = "armv7l" ]; then
+            docker push $NAMESPACE/$REPOSITORY:$TAG-arm
+        fi
+
     done
 
     # create the latest tag
     echo $'\n\n'"--> Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-    docker push $NAMESPACE/$REPOSITORY:latest
+
+    if [ $ARCH = "x86_64" ]; then
+        docker push $NAMESPACE/$REPOSITORY:latest
+    fi
+
+    if [ $ARCH = "armv7l" ]; then
+        docker push $NAMESPACE/$REPOSITORY:latest-arm
+    fi
+
 }
 
 # for each enabled repository
