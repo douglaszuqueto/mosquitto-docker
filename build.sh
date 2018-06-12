@@ -29,17 +29,18 @@ function build_repository {
     # build all enabled versions
     for TAG in $TAGS; do
       # some verbose
-      echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
 
       if [ $USE_CACHE == true ]; then
         # build using cache
         docker build -t $NAMESPACE/$REPOSITORY:$TAG .
         if [ $ARCH = "x86_64" ]; then
+            echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
             docker build -t $NAMESPACE/$REPOSITORY:$TAG .
         fi
 
         if [ $ARCH = "armv7l" ]; then
+            echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG-arm"$'\n'
             docker build -t $NAMESPACE/$REPOSITORY:$TAG-arm .
         fi
       fi
@@ -47,10 +48,12 @@ function build_repository {
       if [ $USE_CACHE == false ]; then
 
         if [ $ARCH = "x86_64" ]; then
+            echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
             docker build --no-cache -t $NAMESPACE/$REPOSITORY:$TAG .
         fi
 
         if [ $ARCH = "armv7l" ]; then
+            echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG-arm"$'\n'
             docker build --no-cache -t $NAMESPACE/$REPOSITORY:$TAG-arm .
         fi
       fi
